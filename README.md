@@ -84,10 +84,5 @@ if __name__ == '__main__':
     dbaord.run(debug=True, port=8055)
 ```
 
-<!-- blank line -->
-<figure class="video_container">
-  <video controls="true" allowfullscreen="true">
-    <source src="https://github.com/tdrobbin/pandex/blob/master/example_vid.mov" type="video/mmov">
-  </video>
-</figure>
-<!-- blank line -->
+<iframe src='https://gfycat.com/ifr/FamiliarRawBlackrhino' frameborder='0' scrolling='no' allowfullscreen width='640' height='394'></iframe>
+
