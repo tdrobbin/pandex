@@ -72,6 +72,7 @@ class PXChart(object):
                  style=None,
                  class_str=None,
                  decimal_places=2,
+                #  dark_theme=False,
                  **kwargs):
         self.chart_type = chart_type
         self.title = title
@@ -85,6 +86,7 @@ class PXChart(object):
         self.class_str = '' if class_str is None else class_str
         self.kwargs = kwargs
         self.decimal_places = decimal_places
+        # self.dark_theme = False
 
         self.pd_func = None if isinstance(pd_obj, (pd.DataFrame, pd.Series)) else copy(pd_obj)
     
@@ -123,13 +125,15 @@ class PXChart(object):
            
 
 class SimpleDashboard(object):
-    def __init__(self, title, charts, reload_interval='page_refresh', dark_theme=False):
+    def __init__(self, title, charts, reload_interval='page_refresh', dark_theme=False, **dash_kwargs):
         self.title = title
         self.charts = charts
         self.reload_interval = reload_interval
 
         # self.app = dash.Dash(title, external_stylesheets=_get_dark_theme_css())
-        self.app = dash.Dash(title)
+        # stylesheets = ['']
+
+        self.app = dash.Dash(__name__, **dash_kwargs)
 
         # if dark_theme:
         #     self.app.css.append_css(_get_dark_theme_css())
@@ -162,7 +166,22 @@ class SimpleDashboard(object):
                         chart.style = style
                     
                     if self.dark_theme:
-                        chart.layout.update(template='plotly_dark')
+
+                        if isinstance(chart, Table):
+                            chart.kwargs.update(dict(
+                                style_header={
+                                    'backgroundColor': 'rgb(25, 25, 25)',
+                                    'border': '1px solid #283442',
+                                },
+                                style_cell={
+                                    'backgroundColor': 'rgb(35, 35, 35)',
+                                    'color': 'white',
+                                    'border': '1px solid #283442', 
+                                },)
+                            )
+
+                        else:
+                            chart.layout.update(template='plotly_dark')
                     
                     fig = chart.get_figure()
 
@@ -187,13 +206,14 @@ class SimpleDashboard(object):
                 html.H2(self.title, style={'margin-top':'60px', 'margin-bottom':'40px', 'text-align': 'center'}),
                 html.Div(self._convert_pandex_charts_to_dash())
             ],
-            id='main-panex',
+            id='main-pandex',
             className='twelve columns' + ' dark-theme' if self.dark_theme else '',
-            style={
-                "padding-right": "40px",
-                'padding-left': '40px',
-                'padding-bottom': '40px'
-            })
+            # style={
+            #     "padding-right": "40px",
+            #     'padding-left': '40px',
+            #     'padding-bottom': '40px'
+            # }
+            )
 
         if isinstance(self.reload_interval, str):
             if self.reload_interval == 'page_refresh':
@@ -205,9 +225,19 @@ class SimpleDashboard(object):
         else:
             raise ValueError('not yet supported')
 
-    def run(self, debug=True):
+    def run(self, use_waitress=False, debug=False, **kwargs):
         self._make_layout()
-        self.app.run_server(debug=debug)
+
+        if debug:
+            self.app.run_server(debug=True, **kwargs)
+
+        else:
+            if use_waitress:
+                from waitress import serve
+                serve(self.app.server, **kwargs)
+            
+            else:
+                self.app.run_server(debug=False, **kwargs)
 
 
 
@@ -263,28 +293,18 @@ class SimpleChart(object):
         return px_chart.get_figure()
 
 
-class Table(PXChart):
+class PXTable(PXChart):
     def get_figure(self):
         self._handle_pd_obj()
-
-        # px_func = getattr(px, self.chart_type)
-        # fig = px_func(self.pd_obj, **self.kwargs)
 
         fig = dash_table.DataTable(
             columns=[{"name": i, "id": i} for i in self.pd_obj.columns],
             data=self.pd_obj.to_dict('records'),
             style_table={'overflowX': 'scroll', 'overflowY': 'scroll', 'height': _get_default_layout()['height']},
-            fixed_rows={ 'headers': True, 'data': 0 },
+            # fixed_rows={ 'headers': True, 'data': 0 },
+            # n_fixed_rows=1,
             **self.kwargs
         )
-
-        # fig.update_layout(**_get_default_layout())
-        # if self.layout is not None:
-        # fig.update_layout(**self.layout)
-        
-        # dcc_graph = dcc.Graph(id=self.id, figure=fig.to_dict())
-        # dcc_graph = dcc.Graph(id=self.id, figure=fig.to_plotly_json())
-
 
         return html.Div(
             [html.H6(self.title, style={'text-align': 'center', 'margin-bottom' :'-.25rem'}), fig],
@@ -308,59 +328,3 @@ class LineChart(SimpleChart):
 class BarChart(SimpleChart):
     def chart_type(self):
         return 'bar'
-
-
-if __name__ == '__main__': 
-    def melt_df_for_px(df):
-        # df = rand_df(rows=500, cumsum=1)
-        df = df.copy()
-        df.rename(columns=str, inplace=1)
-
-        value_vars = df.columns.copy()
-        df['index'] = df.index
-
-        df2 = pd.melt(df, value_vars=value_vars, id_vars='index')
-
-        # px.line(df2, x='index', y='value', color='variable')
-        return df2
-
-    # @me
-    def rand_df(rows=5, cols=3, cumsum=False):
-        if cumsum == 'False':
-            return pd.DataFrame(np.random.randn(rows, cols))
-
-        df = pd.DataFrame(np.random.randn(rows, cols)).cumsum()
-        # return df
-        return melt_df_for_px(df)
-
-
-    dbaord = SimpleDashboard(
-        title='Pandex Dashboard',
-        # dark_theme=True,
-        charts=[
-            [
-                section('PXChart Interface')
-            ],
-            [
-                PXChart(title='gapminder', chart_type='area', pd_obj=px.data.gapminder, x="year", y="pop", color="continent", line_group="country"),
-                PXChart(title='Iris Heatmap', chart_type='density_heatmap', pd_obj=px.data.iris, x="sepal_width", y="sepal_length")
-            ],
-            [
-                PXChart(title='Scatter', chart_type='scatter', pd_obj=px.data.iris, x="sepal_width", y="sepal_length", color="species", layout=dict(legend_orientation='h')),
-                PXChart(title='Scatter No Color', chart_type='scatter', pd_obj=px.data.iris, x="sepal_width", y="sepal_length"),
-                PXChart(title='Scatter Marginal', chart_type='scatter', pd_obj=px.data.iris, x="sepal_width", y="sepal_length", color="species", marginal_y="rug", marginal_x="histogram"),
-            ],
-            [
-                PXChart(title='Cumulative Return', chart_type='line', pd_obj=rand_df, pd_obj_kwargs=dict(rows=300, cumsum=True), x='index', y='value', color='variable')
-            ],
-            [
-                section('SimpleChart Interface')
-            ],
-            [
-                PXChart(title='Cumulative Return 2', chart_type='line', pd_obj=rand_df, pd_obj_kwargs=dict(rows=300, cumsum=True), x='index', y='value', color='variable'),
-                Table(title='Table', chart_type=None, pd_obj=px.data.iris)
-            ],
-        ]
-    )
-
-    dbaord.run()

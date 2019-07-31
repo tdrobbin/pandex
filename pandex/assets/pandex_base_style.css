@@ -1,0 +1,26 @@
+.row {
+  margin-bottom: 10px
+}
+
+body {
+  margin: 0px 0px;
+}
+
+.dark-theme {
+  background-color: rgb(17, 17, 17);
+  color: white;
+}
+
+.dash-spreadsheet-container .dash-spreadsheet-inner {
+  margin-top: 20px;
+  margin-right: 5px;
+  margin-left: 5px;
+}
+
+
+
+#main-pandex {
+  padding-right: 40px;
+  padding-left: 40px;
+  padding-bottom: 40px;
+}
