@@ -4,18 +4,24 @@ import numpy as np
 import plotly_express as px
 
 
-def rand_df(rows=5, cols=3, cumsum=False):
+@make_return_px_tidy_df
+def rand_df_tidy(rows=5, cols=3, cumsum=True):
     if cumsum == 'False':
         return pd.DataFrame(np.random.randn(rows, cols))
 
-    df = pd.DataFrame(np.random.randn(rows, cols)).cumsum()
-    # return df
-    return make_px_tidy_df(df)
+    return pd.DataFrame(np.random.randn(rows, cols)).cumsum()
+
+
+def rand_df(rows=5, cols=3, cumsum=True):
+    if cumsum == 'False':
+        return pd.DataFrame(np.random.randn(rows, cols))
+
+    return pd.DataFrame(np.random.randn(rows, cols)).cumsum()
 
 
 dbaord = SimpleDashboard(
     title='Pandex Dashboard',
-    # dark_theme=True,
+    dark_theme=True,
     charts=[
         [
             section('PXChart Interface')
@@ -30,16 +36,22 @@ dbaord = SimpleDashboard(
             PXChart(title='Scatter Marginal', chart_type='scatter', pd_obj=px.data.iris, x="sepal_width", y="sepal_length", color="species", marginal_y="rug", marginal_x="histogram"),
         ],
         [
-            PXChart(title='Cumulative Return', chart_type='line', pd_obj=rand_df, pd_obj_kwargs=dict(rows=300, cumsum=True), x='index', y='value', color='variable')
+            PXChart(title='Cumulative Return', chart_type='line', pd_obj=rand_df_tidy, pd_obj_kwargs=dict(rows=300, cumsum=True), x='index', y='value', color='variable')
+        ],
+        [
+            PXChart(title='Cumulative Return 2', chart_type='line', pd_obj=rand_df_tidy, pd_obj_kwargs=dict(rows=300, cumsum=True), x='index', y='value', color='variable'),
+            PXTable(title='Table', chart_type=None, pd_obj=px.data.iris),
         ],
         [
             section('SimpleChart Interface')
         ],
         [
-            PXChart(title='Cumulative Return 2', chart_type='line', pd_obj=rand_df, pd_obj_kwargs=dict(rows=300, cumsum=True), x='index', y='value', color='variable'),
-            PXTable(title='Table', chart_type=None, pd_obj=px.data.iris)
-        ],
+            LineChart('Returns', rand_df, {'rows': 200}), 
+            BarChart('Comparisons', rand_df),
+            ScatterChart('Scatter', rand_df, {'rows': 20})
+        ]
     ]
 )
 
-dbaord.run(debug=True)
+if __name__ == '__main__':
+    dbaord.run(debug=True, port=8055)

@@ -11,16 +11,87 @@ body {
   color: white;
 }
 
-.dash-spreadsheet-container .dash-spreadsheet-inner {
+/* .dash-spreadsheet-container .dash-spreadsheet-inner {
   margin-top: 20px;
   margin-right: 5px;
   margin-left: 5px;
+  overflow-y: scroll;
+} */
+
+.dash-spreadsheet-container {
+  overflow: hidden;
 }
 
+.dash-spreadsheet-container .dash-spreadsheet-inner{
+  padding-top: 20px;
+  padding-right: 5px;
+  padding-left: 5px;
+  padding-bottom: 10px;
+  /* overflow-y: scroll;
+  overflow-x: scroll; */
+}
 
+/* .row .columns {
+  margin-left: 0px;
+} */
 
 #main-pandex {
-  padding-right: 40px;
-  padding-left: 40px;
-  padding-bottom: 40px;
+  padding-right: 50px;
+  padding-left: 50px;
+  padding-bottom: 50px;
 }
+
+.element-pandex {
+  /* margin-left: 0px; */
+  /* margin: 0px 0px; */
+}
+
+/* .one.columns {
+  width: 100%;
+}
+
+.two.columns {
+  width: 50%;
+}
+
+.three.columns {
+  width: 45%;
+}
+
+.four.columns {
+  width: 33.33%
+}
+
+.six.columns {
+  width: 50%;
+} */
+
+  /* For devices larger than 550px */
+  @media (min-width: 550px) {
+    /* .container {
+      width: 80%; }
+    .column,
+    .columns {
+      margin-left: 4%; } */
+    .column:first-child,
+    .columns:first-child {
+      margin-left: 0; }
+  
+    .one.column,
+    .one.columns                    { width: 8.3333%; }
+    .two.columns                    { width: 16.6666%; }
+    .three.columns                  { width: 25%;            }
+    .four.columns                   { width: 33.3333%; }
+    .five.columns                   { width: 341.6666%; }
+    .six.columns                    { width: 50%;            }
+    .seven.columns                  { width: 58.3333%; }
+    .eight.columns                  { width: 66.6666%; }
+    .nine.columns                   { width: 75%;          }
+    .ten.columns                    { width: 83.3333%; }
+    .eleven.columns                 { width: 91.6666%; }
+    .twelve.columns                 { width: 100%; margin-left: 0; }
+  
+    .one-third.column               { width: 30.6666666667%; }
+    .two-thirds.column              { width: 65.3333333333%; }
+  
+    .one-half.column                { width: 48%; }

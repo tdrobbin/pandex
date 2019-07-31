@@ -85,6 +85,38 @@
     .two-thirds.column              { width: 65.3333333333%; }
   
     .one-half.column                { width: 48%; }
+
+
+    /* pandex edits */
+    .container {
+      width: 100%; }
+    .column,
+    .columns {
+      margin-left: 0; }
+    .column:first-child,
+    .columns:first-child {
+      margin-left: 0; }
+  
+    .one.column,
+    .one.columns                    { width: 8.3333%; }
+    .two.columns                    { width: 16.6666%; }
+    .three.columns                  { width: 25%;            }
+    .four.columns                   { width: 33.3333%; }
+    .five.columns                   { width: 341.6666%; }
+    .six.columns                    { width: 50%;            }
+    .seven.columns                  { width: 58.3333%; }
+    .eight.columns                  { width: 66.6666%; }
+    .nine.columns                   { width: 75%;          }
+    .ten.columns                    { width: 83.3333%; }
+    .eleven.columns                 { width: 91.6666%; }
+    .twelve.columns                 { width: 100%; margin-left: 0; }
+  
+    .one-third.column               { width: 30.6666666667%; }
+    .two-thirds.column              { width: 65.3333333333%; }
+  
+    .one-half.column                { width: 48%; }
+    /* end pandex edits */
+
   
     /* Offsets */
     .offset-by-one.column,
