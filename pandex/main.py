@@ -221,6 +221,10 @@ class Heatmap(_SimpleChart):
     def chart_type(self):
         return 'density_heatmap'
 
+class AreaChart(_SimpleChart):
+    def chart_type(self):
+        return 'area'
+
 
 class SimpleDashboard(object):
     def __init__(self, title, charts, reload_interval='page_refresh', dark_theme=False, **dash_kwargs):
