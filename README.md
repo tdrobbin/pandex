@@ -58,4 +58,6 @@ dbaord = SimpleDashboard(
 dbaord.run(debug=True)
 ```
 
+![](https://github.com/tdrobbin/pandex/blob/master/Screen%20Shot%202019-07-30%20at%208.09.40%20PM.png)
+
 
