@@ -84,6 +84,10 @@ if __name__ == '__main__':
     dbaord.run(debug=True, port=8055)
 ```
 
-![](https://github.com/tdrobbin/pandex/blob/master/Screen%20Shot%202019-07-31%20at%202.12.42%20PM.png)
-
-
+<!-- blank line -->
+<figure class="video_container">
+  <video controls="true" allowfullscreen="true">
+    <source src="https://github.com/tdrobbin/pandex/blob/master/example_vid.mov" type="video/mmov">
+  </video>
+</figure>
+<!-- blank line -->
