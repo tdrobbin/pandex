@@ -84,6 +84,6 @@ if __name__ == '__main__':
     dbaord.run(debug=True, port=8055)
 ```
 
-![](https://github.com/tdrobbin/pandex/blob/master/Screen%20Shot%202019-07-31%20at%202.12.42%20PM.png)
+![](https://github.com/tdrobbin/pandex/blob/master/example.gif)
 
 
