@@ -76,6 +76,8 @@ class PXChart(object):
             style=None,
             class_str=None,
             decimal_places=2,
+            legend_meta_labels=False,
+            axis_labels=True,
             **kwargs):
         self.chart_type = chart_type
         self.title = title
@@ -88,9 +90,10 @@ class PXChart(object):
         self.style = {} if style is None else style
         self.class_str = '' if class_str is None else class_str
         self.class_str += ' element-pandex'
-        self.kwargs = kwargs
         self.decimal_places = decimal_places
-
+        self.legend_meta_labels = legend_meta_labels
+        self.axis_labels = axis_labels
+        self.kwargs = kwargs
         self.pd_func = None if isinstance(pd_obj,
                                           (pd.DataFrame,
                                            pd.Series)) else copy(pd_obj)
@@ -109,7 +112,7 @@ class PXChart(object):
                 self.pd_obj.columns = [sr_name]
 
 
-    def get_figure(self, lgend_meta_labels=True, axis_labels=True):
+    def get_figure(self):
         self._handle_pd_obj()
 
         px_func = getattr(px, self.chart_type)
@@ -118,13 +121,20 @@ class PXChart(object):
         fig.update_layout(**_get_default_layout())
         fig.update_layout(**self.layout)
 
-        if not axis_labels:        
+        if not self.axis_labels:        
             fig.layout.xaxis.title = None
             fig.layout.yaxis.title = None
-
-        if not lgend_meta_labels:       
-            # https://github.com/plotly/plotly_express/issues/36
-            fig.for_each_trace(lambda t: t.update(name=t.name.split('=')[1]))
+        
+        if len(fig.data) == 1:
+            fig.update_layout(showlegend=False)
+        
+        else:
+            if not self.legend_meta_labels:
+                try:       
+                    # https://github.com/plotly/plotly_express/issues/36
+                    fig.for_each_trace(lambda t: t.update(name=t.name.split('=')[1]))
+                except IndexError:
+                    pass
 
         dcc_graph = dcc.Graph(id=self.id, figure=fig.to_dict())
 
@@ -177,6 +187,7 @@ class _SimpleChart(object):
         raise NotImplementedError
     
     def _set_px_chart_kwargs(self):
+        # do any extra things for this particular chart type
         pass
 
     def get_figure(self):
@@ -193,10 +204,12 @@ class _SimpleChart(object):
             y='value',
             color='variable',
             layout=self.layout,
+            legend_meta_labels=False, 
+            axis_labels=False,
             **self.kwargs
         )
 
-        return px_chart.get_figure(lgend_meta_labels=False, axis_labels=False)
+        return px_chart.get_figure()
 
 
 class ScatterChart(_SimpleChart):
@@ -267,6 +280,7 @@ class SimpleDashboard(object):
 
                     # if chart.style is None:
                     #     chart.style = style
+                    # rgb(17, 17, 17)
 
                     if self.dark_theme:
 
@@ -277,7 +291,9 @@ class SimpleDashboard(object):
                                     'border': '1px solid #283442',
                                 },
                                 style_cell={
-                                    'backgroundColor': 'rgb(35, 35, 35)',
+                                    # 'backgroundColor': 'rgb(35, 35, 35)',
+                                    'backgroundColor': 'rgb(17, 17, 17)',
+
                                     'color': 'white',
                                     'border': '1px solid #283442',
                                 },)
