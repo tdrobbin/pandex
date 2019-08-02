@@ -152,7 +152,7 @@ class PXTable(PXChart):
             columns=[{"name": i, "id": i} for i in self.pd_obj.columns],
             data=self.pd_obj.to_dict('records'),
             # style_table={'overflowX': 'scroll', 'overflowY': 'scroll', 'height': _get_default_layout()['height']},
-            style_table={'height': _get_default_layout()['height'] - 80},
+            style_table={'height': _get_default_layout()['height']},
 
             # fixed_rows={ 'headers': True, 'data': 0 },
             # n_fixed_rows=1,
