@@ -2,6 +2,7 @@ from pandex import *
 import pandas as pd
 import numpy as np
 import plotly_express as px
+import dash_core_components as dcc
 
 
 def rand_df(rows=5, cols=3, cumsum=True):
@@ -11,7 +12,7 @@ def rand_df(rows=5, cols=3, cumsum=True):
     return pd.DataFrame(np.random.randn(rows, cols)).cumsum()
 
 
-# decorator from pande to make rand_df return a tidy/normalized dataframe
+# decorator from pandex to make rand_df return a tidy/normalized dataframe
 rand_df_tidy = make_return_px_tidy_df(rand_df)
 
 
@@ -49,6 +50,7 @@ dbaord = SimpleDashboard(
         ],
     ]
 )
+
 
 if __name__ == '__main__':
     dbaord.run(debug=True, port=8055)

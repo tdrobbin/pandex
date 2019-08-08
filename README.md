@@ -4,7 +4,7 @@ Simple Dashboarding using pandas, dash, and plotly express.
 ## Usage
 Pass a function that returns a dataframe/series, and optional keyoword arguments, to a chart. Put these tpgether in a list of lists (row x column order) to create the dashboard layout.
 
-Two main chart interfaces
+Two main chart interfaces:
 
 Can use a simple chart, which takes a function that returns regular pandas dataframe/series: 
 ```python
@@ -16,16 +16,45 @@ Or can use a px chart which takes a function that returns a 'tidy'/normalized da
 PXChart(title='Global Population', chart_type='area', pd_obj=px.data.gapminder, x="year", y="pop", color="continent", line_group="country")
 ```
 
-
-Pass a function that returns a 'tidy' (normalized) dataframe (same format that plotly express accepts) to a PXChart, along with the chart type and other keyword arguments for that plotly express chart type ().
-
-
-
 Can use ```make_px_tidy_df``` to turn an 'untidy' (un-normalized) dataframe into a tidy one. Can also used ```make_return_tidy_df``` as a decorator to make a function return a tidy dataframe.
 
 Optional dark theme.
 
-## Example
+## Example 1
+```python
+from pandex import *
+import pandas as pd
+import numpy as np
+import plotly_express as px
+import dash_core_components as dcc
+
+
+def rand_df(rows=5, cols=3, cumsum=True):
+    if cumsum == 'False':
+        return pd.DataFrame(np.random.randn(rows, cols))
+
+    return pd.DataFrame(np.random.randn(rows, cols)).cumsum()
+
+
+dbaord = SimpleDashboard(
+    title='Example Pandex Dashboard',
+    charts=[
+        [
+            BarChart('Bar', rand_df), LineChart('Line', rand_df, {'rows': 200})
+        ],
+        [
+            ScatterChart('Scatter', rand_df, {'rows': 20, 'cumsum': False})
+        ],
+    ]
+)
+
+
+if __name__ == '__main__':
+    dbaord.run(debug=True, port=8055)
+```
+![](https://github.com/tdrobbin/pandex/blob/master/example1.png)
+
+## Example 2
 
 ```python
 from pandex import *
@@ -41,7 +70,7 @@ def rand_df(rows=5, cols=3, cumsum=True):
     return pd.DataFrame(np.random.randn(rows, cols)).cumsum()
 
 
-# decorator from pande to make rand_df return a tidy/normalized dataframe
+# decorator from pandex to make rand_df return a tidy/normalized dataframe
 rand_df_tidy = make_return_px_tidy_df(rand_df)
 
 

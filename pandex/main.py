@@ -15,6 +15,11 @@ import plotly.express as px
 
 from copy import copy
 
+import plotly.io as pio
+import plotly.express as px
+
+pio.templates.default = "plotly_white"
+
 
 def _get_default_layout():
     return dict(
@@ -238,12 +243,52 @@ class AreaChart(_SimpleChart):
     def chart_type(self):
         return 'area'
 
+from inspect import signature
+class Interactive(object):
+    def __init__(self, pandex_obj=None, func=None):
+        raise NotImplementedError
+
+        self.pandex_obj = pandex_obj
+        self.func = func
+
+        self.func_sig = signature(func)
+
+        self.id = str(uuid.uuid1())
+
+    def get_figure(self):
+        # pass
+        return html.Div([
+            dcc.Tabs(id=self.id, children=[
+                dcc.Tab(label='Input', children=[
+                    html.Div([
+                            html.Label(param_name),
+                            dcc.Input(value=str(param.default), type='text'),
+                    ])
+                    for param_name, param in self.func_sig.parameters.items()              
+                ]),
+                dcc.Tab(label='Output', children=[
+                        dcc.Graph(
+                            id='example-graph-1',
+                            figure={
+                                'data': [
+                                    {'x': [1, 2, 3], 'y': [1, 4, 1],
+                                        'type': 'bar', 'name': 'SF'},
+                                    {'x': [1, 2, 3], 'y': [1, 2, 3],
+                                    'type': 'bar', 'name': u'Montréal'},
+                                ]
+                            }
+                        )
+                ]),
+            ])
+        ])
+
 
 class SimpleDashboard(object):
     def __init__(self, title, charts, reload_interval='page_refresh', dark_theme=False, **dash_kwargs):
         self.title = title
         self.charts = charts
         self.reload_interval = reload_interval
+        self.dash_kwargs = dash_kwargs
         self.app = dash.Dash(__name__, **dash_kwargs)
         self.dark_theme = dark_theme
 
@@ -305,7 +350,10 @@ class SimpleDashboard(object):
                     fig = chart.get_figure()
 
                 else:
-                    fig = chart
+                    try:
+                        fig = chart.get_figure()
+                    except AttributeError:
+                        fig = chart
 
                 charts_in_row.append(fig)
 

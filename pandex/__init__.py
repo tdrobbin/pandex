@@ -1,1 +1,1 @@
-from .main import PXChart, SimpleDashboard, PXTable, make_px_tidy_df, make_return_px_tidy_df, section, LineChart, BarChart, Heatmap, ScatterChart, AreaChart
+from .main import PXChart, SimpleDashboard, PXTable, make_px_tidy_df, make_return_px_tidy_df, section, LineChart, BarChart, Heatmap, ScatterChart, AreaChart, Interactive

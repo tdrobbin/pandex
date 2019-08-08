@@ -6,9 +6,18 @@ body {
   margin: 0px 0px;
 }
 
+html {
+  /* background-color:rgb(240,240,240) */
+  background-color:white;
+
+
+}
+
 .dark-theme {
-  /* background-color: rgb(17, 17, 17); */
-  background-color: rgb(3, 3, 3);
+  background-color: rgb(17, 17, 17);
+  /* background-color: rgb(3, 3, 3); */
+  /* background-color: rgb(0, 0, 0); */
+
   color: white;
 }
 
