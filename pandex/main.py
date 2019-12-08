@@ -107,14 +107,19 @@ class PXChart(object):
         if self.pd_func is not None:
             self.pd_obj = self.pd_func(**self.pd_obj_kwargs)
 
-        self.pd_obj = self.pd_obj.round(self.decimal_places)
-
         if isinstance(self.pd_obj, pd.Series):
             sr_name = self.pd_obj.name
             self.pd_obj = pd.DataFrame({self.title: self.pd_obj})
 
             if sr_name is not None:
                 self.pd_obj.columns = [sr_name]
+        
+        if self.decimal_places is not None:
+            # round only numeric columns
+            num_cols = self.pd_obj.select_dtypes('number').columns
+            self.pd_obj = self.pd_obj.assign(**{c: self.pd_obj[c].round(self.decimal_places) for c in num_cols})
+
+            # self.pd_obj = self.pd_obj.round(self.decimal_places)
 
 
     def get_figure(self):

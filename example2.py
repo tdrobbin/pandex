@@ -53,4 +53,4 @@ dbaord = SimpleDashboard(
 
 
 if __name__ == '__main__':
-    dbaord.run(debug=True, port=8055)
+    dbaord.run(debug=True, port=8059)
