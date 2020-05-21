@@ -60,6 +60,8 @@ html {
 .element-pandex {
   /* margin-left: 0px; */
   /* margin: 0px 0px; */
+  padding-left: 10px;
+  padding-right: 10px;
 }
 
 /* .one.columns {
