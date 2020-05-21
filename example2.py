@@ -18,7 +18,7 @@ rand_df_tidy = make_return_px_tidy_df(rand_df)
 
 dbaord = SimpleDashboard(
     title='Example Pandex Dashboard',
-    dark_theme=True,
+    # dark_theme=True,
     charts=[
         [
             section('SimpleChart Interface')

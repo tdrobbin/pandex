@@ -37,8 +37,14 @@ html {
   padding-right: 5px;
   padding-left: 5px;
   padding-bottom: 10px; */
-  overflow-y: scroll;
-  overflow-x: scroll;
+  padding-top: 11px;
+  overflow: scroll;
+  /*overflow-y: scroll;
+  overflow-x: scroll;*/
+}
+
+.dash-spreadsheet-container .dash-spreadsheet-inner table {
+  width: 100%
 }
 
 /* .row .columns {
